@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Fakes;
 using Microsoft.Extensions.DependencyInjection.Specification;
 using Microsoft.Extensions.DependencyInjection.Specification.Fakes;
 using Microsoft.Extensions.DependencyInjection.Tests.Fakes;
+using Microsoft.Extensions.DependencyInjection.Tests.Utils.LargeServiceGraph;
 using Xunit;
 
 namespace Microsoft.Extensions.DependencyInjection.Tests
@@ -345,6 +346,25 @@ namespace Microsoft.Extensions.DependencyInjection.Tests
                 "'Microsoft.Extensions.DependencyInjection.Tests.ServiceProviderContainerTests+AsyncDisposable' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.",
                 exception.Message);
         }
+
+        [Fact]
+        public void ResolveService_LargeGraph()
+        {
+            // Arrange
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLargeServiceGraph(ServiceLifetime.Scoped);
+
+            var serviceProvider = CreateServiceProvider(serviceCollection);
+
+            // Act + Assert
+            using (var serviceScope = serviceProvider.CreateScope())
+            {
+                var service = serviceScope.ServiceProvider.GetService<LS1>();
+
+                Assert.NotNull(service);
+            }
+        }
+
 
         private class FakeMultipleServiceWithIEnumerableDependency: IFakeMultipleService
         {

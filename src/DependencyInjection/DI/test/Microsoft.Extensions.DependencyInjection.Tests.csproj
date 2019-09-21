@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Utils\LargeServiceGraph.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LargeServiceGraph.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <Reference Include="Microsoft.Extensions.DependencyInjection.Specification.Tests" />
     <Reference Include="Microsoft.Extensions.DependencyInjection" />
@@ -14,7 +22,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Utils\LargeServiceGraph.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LargeServiceGraph.cs</LastGenOutput>
+    </None>
     <None Update="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Utils\LargeServiceGraph.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LargeServiceGraph.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

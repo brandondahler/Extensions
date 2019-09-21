@@ -1,11 +1,14 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace Microsoft.Extensions.DependencyInjection.ServiceLookup
 {
     internal abstract class CallSiteVisitor<TArgument, TResult>
     {
         private readonly StackGuard _stackGuard;
+
+        private long _callSitesVisited = 0;
 
         protected CallSiteVisitor()
         {
@@ -14,6 +17,13 @@ namespace Microsoft.Extensions.DependencyInjection.ServiceLookup
 
         protected virtual TResult VisitCallSite(ServiceCallSite callSite, TArgument argument)
         {
+            Interlocked.Increment(ref _callSitesVisited);
+
+            if (_callSitesVisited > 100000000)
+            {
+                throw new InvalidOperationException("Visited too many CallSites.");
+            }
+
             if (!_stackGuard.TryEnterOnCurrentStack())
             {
                 return _stackGuard.RunOnEmptyStack((c, a) => VisitCallSite(c, a), callSite, argument);
